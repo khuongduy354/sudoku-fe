@@ -1,4 +1,3 @@
-import { sudokuSolver } from "../SudokuSolver/sudokuSolver";
 export class SudokuBoard {
   //methods:🥳
   //props:🏬
@@ -37,7 +36,8 @@ export class SudokuBoard {
   parseGameState = (): void => {
     //split into array of sudoku rows
     const splittedRows = this.stringGameState.split("\n");
-    splittedRows.pop(); //remove last "" in the array
+    //in case string ends with \n, remove the last empty string ""
+    if (splittedRows[splittedRows.length - 1] === "") splittedRows.pop();
 
     //for each string, format it into a nested array of numbers
     // result is a 2 dimensional array, with rows and columns
@@ -54,7 +54,7 @@ export class SudokuBoard {
   };
 
   //generate a random board game based on difficulty 🥳
-  generateBoard = (difficulty: number) => {};
+  generateNotUniqueBoard = (difficulty: number) => {};
 
   //check if a cell is valid 🥳
   isCellValid = (posX: number, posY: number): boolean => {
@@ -90,3 +90,19 @@ export class SudokuBoard {
     return true;
   };
 }
+const boardString =
+  "090000006\n" +
+  "000960485\n" +
+  "000581000\n" +
+  "004000000\n" +
+  "517200900\n" +
+  "602000370\n" +
+  "100804020\n" +
+  "706000810\n" +
+  "300090000";
+
+const board = new SudokuBoard(boardString);
+const array = board.getArrayGameState();
+const string = board.getStringGameState();
+console.log(string);
+console.log(array);
