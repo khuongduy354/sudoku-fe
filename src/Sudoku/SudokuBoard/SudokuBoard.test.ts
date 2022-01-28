@@ -1,5 +1,9 @@
 import { sudokuBoardBuilder } from "..";
-import { boardString, invalidBoardString } from "../../_global";
+import {
+  solvedBoardString,
+  boardString,
+  invalidBoardString,
+} from "../../_global";
 const emptyBoard = sudokuBoardBuilder();
 const initializedBoard = sudokuBoardBuilder(boardString);
 
@@ -55,7 +59,17 @@ it("Can make random board with solutions", () => {
 });
 
 //🏁
-// it("Can check if board is empty", () => {}); //checker
+it("Can check if board is empty", () => {
+  expect(emptyBoard.isEmptyBoard()).toBe(true);
+  expect(initializedBoard.isEmptyBoard()).toBe(false);
+});
+
+//🏁
+it("Can check if the sudoku is solved", () => {
+  const solvedBoard = sudokuBoardBuilder(solvedBoardString);
+  expect(solvedBoard.isPuzzleSolved()).toBe(true);
+  expect(initializedBoard.isPuzzleSolved()).toBe(false);
+});
 
 //🏁
 // it("Can check if a cell is valid", () => { //after append features //checker
@@ -68,8 +82,40 @@ it("Can make random board with solutions", () => {
 // });
 
 //🧰
-//append to a specific cell //doer
-//erase a specific cell //doer
+//append to a specific cell
+it("Can fill a cell", () => {
+  const board = sudokuBoardBuilder(boardString);
+  board.fillCell(0, 0, 1);
+  const expected =
+    "190000006\n" +
+    "000960485\n" +
+    "000581000\n" +
+    "004000000\n" +
+    "517200900\n" +
+    "602000370\n" +
+    "100804020\n" +
+    "706000810\n" +
+    "300090000";
+  expect(board.getStringGameState()).toBe(expected);
+});
+
+//🧰
+//erase a specific cell
+it("Can erase a specific cell", () => {
+  const board = sudokuBoardBuilder(boardString);
+  board.eraseCell(0, 1);
+  const expected =
+    "000000006\n" +
+    "000960485\n" +
+    "000581000\n" +
+    "004000000\n" +
+    "517200900\n" +
+    "602000370\n" +
+    "100804020\n" +
+    "706000810\n" +
+    "300090000";
+  expect(board.getStringGameState()).toBe(expected);
+});
+
 //forward last move //doer
 //undo last move //doer
-//check if sudoku is solved //doer

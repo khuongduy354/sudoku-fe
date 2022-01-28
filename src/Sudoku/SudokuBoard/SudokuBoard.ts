@@ -37,18 +37,18 @@ export class SudokuBoard {
   }
 
   //display full board 🥖
-  renderBoard = () => {
-    this.arraySolutionState.map((row) => {
-      row.map((col) => process.stdout.write(col.toString()));
-      console.log("");
-    });
-  };
+  // renderBoard = () => {
+  //   this.arraySolutionState.map((row) => {
+  //     row.map((col) => process.stdout.write(col.toString()));
+  //     console.log("");
+  //   });
+  // };
 
   //getter for array solution🥖
   getArraySolutionState = () => {
     return this.arraySolutionState;
   };
-
+  //getter for string solution 🥖
   getStringSolutionState = () => {
     return this.stringSolutionState;
   };
@@ -68,14 +68,29 @@ export class SudokuBoard {
 
   //check if board is empty (full of 0's) 🏁
   isEmptyBoard = () => {
-    const emptyBoardPattern = new RegExp("([0]{9}\n){9}|([0]{9}\n){8}[0]{9}");
+    const emptyBoardPattern = new RegExp("([0]{9}\n){8}[0]{9}");
     if (emptyBoardPattern.test(this.stringGameState)) {
       return true;
     } else {
       return false;
     }
   };
+
   //check if sudoku is solved 🏁
+  isPuzzleSolved = () => {
+    //iterate and check if every single cell valid
+    for (let row = 0; row < 9; row++) {
+      for (let col = 0; col < 9; col++) {
+        if (
+          //if a single cell is invalid or empty, then it's not solved
+          this.arrayGameState[row][col] === 0 ||
+          !isCellValid(row, col, this.arrayGameState)
+        )
+          return false;
+      }
+    }
+    return true;
+  };
 
   //generate a random board game based on difficulty 🏗️️
   generateRandomBoard = (difficulty: number = 0.5) => {
@@ -124,6 +139,20 @@ export class SudokuBoard {
     }
 
     this.arrayGameState = tempUnsolvedPuzzle;
+    this.stringGameState = parseGameStateToString(this.arrayGameState);
+  };
+
+  //🧰
+  fillCell = (posX: number, posY: number, value: number) => {
+    //validate number
+    if (value > 9 || value < 1) return;
+    this.arrayGameState[posX][posY] = value;
+    this.stringGameState = parseGameStateToString(this.arrayGameState);
+  };
+
+  //🧰
+  eraseCell = (posX: number, posY: number) => {
+    this.arrayGameState[posX][posY] = 0;
     this.stringGameState = parseGameStateToString(this.arrayGameState);
   };
 
