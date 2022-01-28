@@ -1,5 +1,8 @@
 import { isCellValid, getEmptyPositions } from "../helper";
 export function sudokuSolver(inputBoard: number[][]): number[][] {
+  //get deep copy of input
+  inputBoard = JSON.parse(JSON.stringify(inputBoard));
+
   //get all emptyPos
   const emptyPos = getEmptyPositions(inputBoard);
   if (emptyPos.length === 0) return inputBoard; //return the board if it's full
