@@ -9,7 +9,7 @@ export function sudokuBoardBuilder(initialBoard: string = "") {
   }
 
   //regex validation for input board string
-  const boardPattern = new RegExp("([0-9]{9}\n){9}|([0-9]{9}\n){8}[0-9]{9}");
+  const boardPattern = new RegExp("([0-9]{9}\n){8}[0-9]{9}");
   if (!boardPattern.test(initialBoard)) return new SudokuBoard("");
 
   //sudoku validation for input board string
