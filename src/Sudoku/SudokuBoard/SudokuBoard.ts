@@ -1,9 +1,22 @@
+import { sudokuSolver } from "../SudokuSolver/sudokuSolver";
+import {
+  parseGameStateToArray,
+  parseGameStateToString,
+  isCellValid,
+  randomNumbersGenerator,
+} from "../helper";
+
 export class SudokuBoard {
-  //methods:🥳
-  //props:🏬
+  //getter methods: 🥖
+  //checker methods: 🏁
+  //manipulate methods: 🧰
+  //constructor / maker methods: 🏗️
+  //props: 🏬
 
   private stringGameState: string = ""; //game state in string form 🏬
   private arrayGameState: number[][] = []; //game state in array form 🏬
+  private arraySolutionState: number[][] = []; //solution state in array form 🏬
+  private stringSolutionState: string = ""; //solution state in string form 🏬
 
   //initiate board 🏗️
   constructor(initialBoard: string) {
@@ -12,97 +25,101 @@ export class SudokuBoard {
       for (let i = 0; i < 9; i++) {
         this.stringGameState = this.stringGameState + "000000000\n";
       }
-      this.parseGameState();
     } else {
       //else update it according to input board
       this.stringGameState = initialBoard;
-      this.parseGameState();
     }
+    //parse string to array
+    this.arrayGameState = parseGameStateToArray(this.stringGameState);
+    if (initialBoard !== "")
+      //if it's not empty, solve it
+      this.arraySolutionState = sudokuSolver(this.arrayGameState);
   }
 
-  //getter for full solution of current game 🥳
+  //display full board 🥖
+  renderBoard = () => {
+    this.arraySolutionState.map((row) => {
+      row.map((col) => process.stdout.write(col.toString()));
+      console.log("");
+    });
+  };
+
+  //getter for full solution of current game 🥖
   getSolution = () => {};
 
-  //getter for current game state in string 🥳
+  //getter for current game state in string 🥖
   getStringGameState = (): string => {
     return this.stringGameState;
   };
-  //getter for current game state in array 🥳
+  //getter for current game state in array 🥖
   getArrayGameState = (): number[][] => {
     return this.arrayGameState;
   };
-
-  //parse from string to 2D array 🥳
-  parseGameState = (): void => {
-    //split into array of sudoku rows
-    const splittedRows = this.stringGameState.split("\n");
-    //in case string ends with \n, remove the last empty string ""
-    if (splittedRows[splittedRows.length - 1] === "") splittedRows.pop();
-
-    //for each string, format it into a nested array of numbers
-    // result is a 2 dimensional array, with rows and columns
-    const arrayGameState = splittedRows.map((row) => {
-      let tempArray = [];
-      for (const char of row) {
-        tempArray.push(parseInt(char));
-      }
-      return tempArray;
-    });
-
-    //update array game state
-    this.arrayGameState = arrayGameState;
+  //check if a cell is valid 🏁
+  isCellValid = (posX: number, posY: number): boolean => {
+    return isCellValid(posX, posY, this.arrayGameState);
   };
 
-  //generate a random board game based on difficulty 🥳
-  generateNotUniqueBoard = (difficulty: number) => {};
-
-  //check if a cell is valid 🥳
-  isCellValid = (posX: number, posY: number): boolean => {
-    //check if the input position is valid
-    if (posX > 8 || posX < 0 || posY > 8 || posY < 0) {
+  //check if board is empty (full of 0's) 🏁
+  isEmptyBoard = () => {
+    const emptyBoardPattern = new RegExp("([0]{9}\n){9}|([0]{9}\n){8}[0]{9}");
+    if (emptyBoardPattern.test(this.stringGameState)) {
+      return true;
+    } else {
       return false;
     }
-
-    const currentCellValue = this.arrayGameState[posX][posY];
-
-    //check the cell's row
-    for (let column = 0; column <= posY; column++) {
-      const testTargetValue = this.arrayGameState[posX][column];
-      //if the selected cell has the same value as another cell in the same row
-      //return false
-      if (currentCellValue === testTargetValue && column !== posY) {
-        return false;
-      }
-    }
-
-    //check the cell's column
-    for (let row = 0; row <= posX; row++) {
-      const testTargetValue = this.arrayGameState[row][posY];
-      //if the selected cell has the same value as another cell in the same row
-      //return false
-      if (currentCellValue === testTargetValue && row !== posX) {
-        return false;
-      }
-    }
-
-    //check the cell's 3x3 area around it
-
-    return true;
   };
-}
-const boardString =
-  "090000006\n" +
-  "000960485\n" +
-  "000581000\n" +
-  "004000000\n" +
-  "517200900\n" +
-  "602000370\n" +
-  "100804020\n" +
-  "706000810\n" +
-  "300090000";
+  //check if sudoku is solved 🏁
 
-const board = new SudokuBoard(boardString);
-const array = board.getArrayGameState();
-const string = board.getStringGameState();
-console.log(string);
-console.log(array);
+  //generate a random board game based on difficulty 🏗️️
+  generateRandomBoard = (difficulty: number = 0.5) => {
+    //deep clone array
+    const tempSolutionArray = JSON.parse(JSON.stringify(this.arrayGameState));
+
+    //1. Fill 3 diagonal 3x3 areas randomly
+    for (let i = 0; i <= 6; i += 3) {
+      const randomArray = randomNumbersGenerator();
+      for (let colOffset = 0; colOffset < 3; colOffset++) {
+        //make sure not getting undefined
+        const num = randomArray.pop();
+        const num2 = randomArray.pop();
+        const num3 = randomArray.pop();
+        if (num && num2 && num3) {
+          //set 1 row at a time
+          tempSolutionArray[i][i + colOffset] = num;
+          tempSolutionArray[i + 1][i + colOffset] = num2;
+          tempSolutionArray[i + 2][i + colOffset] = num3;
+        }
+      }
+    }
+    //2. Solve for the rest of the board and update to solution state
+    this.arraySolutionState = sudokuSolver(tempSolutionArray);
+    this.stringSolutionState = parseGameStateToString(this.arraySolutionState);
+
+    //3. Remove based on difficulty
+    const easiest = 38; //amount of shown cells in easiest mode
+    const hardest = 20; //amount of shown cells in hardest mode
+    const removeAmount =
+      9 * 9 - (hardest - Math.floor(difficulty * (hardest - easiest))); //amount of cells to be removed
+
+    //board after deleted cells randomly
+    const tempUnsolvedPuzzle: number[][] = JSON.parse(
+      JSON.stringify(this.arraySolutionState)
+    );
+
+    //remove the cells randomly
+    for (let i = 0; i < removeAmount; i++) {
+      const row = Math.floor(Math.random() * 9); //random number in [1-9]
+      const col = Math.floor(Math.random() * 9);
+
+      //delete once more if the same cell is deleted twice
+      if (tempUnsolvedPuzzle[row][col] === 0) i--;
+      tempUnsolvedPuzzle[row][col] = 0;
+    }
+
+    this.arrayGameState = tempUnsolvedPuzzle;
+    this.stringGameState = parseGameStateToString(this.arrayGameState);
+  };
+
+  //🧰
+}
