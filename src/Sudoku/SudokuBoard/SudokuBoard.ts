@@ -44,14 +44,20 @@ export class SudokuBoard {
     });
   };
 
-  //getter for full solution of current game 🥖
-  getSolution = () => {};
+  //getter for array solution🥖
+  getArraySolutionState = () => {
+    return this.arraySolutionState;
+  };
 
-  //getter for current game state in string 🥖
+  getStringSolutionState = () => {
+    return this.stringSolutionState;
+  };
+
+  //getter for string game state 🥖
   getStringGameState = (): string => {
     return this.stringGameState;
   };
-  //getter for current game state in array 🥖
+  //getter for array game state 🥖
   getArrayGameState = (): number[][] => {
     return this.arrayGameState;
   };

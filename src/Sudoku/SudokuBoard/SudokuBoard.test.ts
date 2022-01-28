@@ -29,25 +29,29 @@ it("Can make empty board ", () => {
 
 //🏗️
 it("Can generate empty board if input is invalid", () => {
-  //maker
   const invalidBoard = sudokuBoardBuilder(invalidBoardString);
   expect(invalidBoard.isEmptyBoard()).toBe(true);
 });
 
 //🏗️
 it("Can generate board according to input if input board valid", () => {
-  //maker
   expect(initializedBoard?.getStringGameState()).toBe(boardString);
+  expect(initializedBoard.getArraySolutionState()[0].length).toBe(9);
+  // expect(initializedBoard.getStringSolutionState()).toBe();
 });
 
 //🏗️
 // it("Can generate solution according to input if input board valid", () => {}); //maker
 
 //🏗️
-it("Can make random board", () => {
-  //maker
-  //solution array lengths
+it("Can make random board with solutions", () => {
   //string pattern
+  const newBoard = sudokuBoardBuilder();
+  newBoard.generateRandomBoard();
+  expect(newBoard.getArrayGameState()[0].length).toBe(9);
+  // expect(newBoard.getStringGameState()).toBe();
+  expect(newBoard.getArraySolutionState()[0].length).toBe(9);
+  // expect(newBoard.getStringSolutionState()).toBe("");
 });
 
 //🏁
