@@ -14,8 +14,9 @@ const initializedBoard = sudokuBoardBuilder(boardString);
 //🏗️
 it("Can make empty board ", () => {
   const stringBoard = emptyBoard?.getStringGameState();
+
   expect(stringBoard).toBe(
-    "000000000\n000000000\n000000000\n000000000\n000000000\n000000000\n000000000\n000000000\n000000000\n"
+    "000000000\n000000000\n000000000\n000000000\n000000000\n000000000\n000000000\n000000000\n000000000"
   );
   const arrayBoard = emptyBoard?.getArrayGameState();
   expect(arrayBoard).toEqual([
@@ -117,5 +118,68 @@ it("Can erase a specific cell", () => {
   expect(board.getStringGameState()).toBe(expected);
 });
 
-//forward last move //doer
-//undo last move //doer
+//🧰
+//forward last move
+it("Can forward moves", () => {
+  const board = sudokuBoardBuilder(boardString);
+  let expected =
+    "190000006\n" +
+    "000960485\n" +
+    "000581000\n" +
+    "004000000\n" +
+    "517200900\n" +
+    "602000370\n" +
+    "100804020\n" +
+    "706000810\n" +
+    "300090000";
+
+  board.fillCell(0, 0, 1);
+  board.undo();
+  board.forward();
+  expect(board.getStringGameState()).toBe(expected);
+  expect(board.getActionHistory()).toEqual(["001"]);
+  expect(board.getUndoedHistory()).toEqual([]);
+});
+
+//🧰
+//undo last moves
+it("Can undo moves", () => {
+  const board = sudokuBoardBuilder(boardString);
+  let expected =
+    "090000006\n" +
+    "000960485\n" +
+    "000581000\n" +
+    "004000000\n" +
+    "517200900\n" +
+    "602000370\n" +
+    "100804020\n" +
+    "706000810\n" +
+    "300090000";
+
+  //move 3 times, undo once
+  board.fillCell(0, 0, 1);
+  board.fillCell(0, 0, 2);
+  board.fillCell(0, 0, 3);
+  board.undo();
+  expected = "2" + expected.substring(1);
+  expect(board.getStringGameState()).toBe(expected);
+  expect(board.getActionHistory()).toEqual(["001", "002"]);
+  expect(board.getUndoedHistory()).toEqual(["003"]);
+
+  //move 3 times, undo once, move 1 more
+  board.fillCell(0, 0, 4);
+  expect(board.getActionHistory()).toEqual(["001", "002", "003", "002", "004"]);
+  expect(board.getUndoedHistory()).toEqual([]);
+
+  //move once, and undo once
+  const moveOnceBoard = sudokuBoardBuilder(boardString);
+  moveOnceBoard.fillCell(0, 0, 1);
+  moveOnceBoard.undo();
+  expected = "0" + expected.substring(1);
+  expect(moveOnceBoard.getStringGameState()).toBe(expected);
+
+  //move once undo one and move again
+  moveOnceBoard.fillCell(0, 0, 1);
+  expect(moveOnceBoard.getActionHistory()).toEqual(["001", "00", "001"]);
+  expect(moveOnceBoard.getUndoedHistory()).toEqual([]);
+});

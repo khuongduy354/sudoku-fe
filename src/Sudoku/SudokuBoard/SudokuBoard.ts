@@ -5,7 +5,6 @@ import {
   isCellValid,
   randomNumbersGenerator,
 } from "../helper";
-
 export class SudokuBoard {
   //getter methods: 🥖
   //checker methods: 🏁
@@ -13,24 +12,24 @@ export class SudokuBoard {
   //constructor / maker methods: 🏗️
   //props: 🏬
 
-  private stringGameState: string = ""; //game state in string form 🏬
-  private arrayGameState: number[][] = []; //game state in array form 🏬
-  private arraySolutionState: number[][] = []; //solution state in array form 🏬
-  private stringSolutionState: string = ""; //solution state in string form 🏬
+  actionHistory: string[] = []; //main timeline 🏬
+  undoedHistory: string[] = []; //use for history mechanism 🏬
+  stringGameState: string = ""; //game state in string form 🏬
+  arrayGameState: number[][] = []; //game state in array form 🏬
+  arraySolutionState: number[][] = []; //solution state in array form 🏬
+  stringSolutionState: string = ""; //solution state in string form 🏬
 
   //initiate board 🏗️
   constructor(initialBoard: string) {
     //if no input board found, make an empty board
     if (initialBoard === "") {
-      for (let i = 0; i < 9; i++) {
-        this.stringGameState = this.stringGameState + "000000000\n";
-      }
+      this.generateEmptyBoard();
     } else {
       //else update it according to input board
       this.stringGameState = initialBoard;
+      this.arrayGameState = parseGameStateToArray(this.stringGameState);
     }
     //parse string to array
-    this.arrayGameState = parseGameStateToArray(this.stringGameState);
     if (initialBoard !== "")
       //if it's not empty, solve it
       this.arraySolutionState = sudokuSolver(this.arrayGameState);
@@ -43,6 +42,16 @@ export class SudokuBoard {
   //     console.log("");
   //   });
   // };
+
+  //getter for history 🥖
+  getActionHistory = () => {
+    return this.actionHistory;
+  };
+
+  //getter for undoed history 🥖
+  getUndoedHistory = () => {
+    return this.undoedHistory;
+  };
 
   //getter for array solution🥖
   getArraySolutionState = () => {
@@ -91,9 +100,21 @@ export class SudokuBoard {
     }
     return true;
   };
-
+  //make empty board🏗️️
+  generateEmptyBoard = () => {
+    for (let i = 0; i < 9; i++) {
+      if (i === 8) {
+        //remove \n at last iteration
+        this.stringGameState = this.stringGameState + "000000000";
+        break;
+      }
+      this.stringGameState = this.stringGameState + "000000000\n";
+    }
+    this.arrayGameState = parseGameStateToArray(this.stringGameState);
+  };
   //generate a random board game based on difficulty 🏗️️
   generateRandomBoard = (difficulty: number = 0.5) => {
+    this.resetGame(); //reset everything
     //deep clone array
     const tempSolutionArray = JSON.parse(JSON.stringify(this.arrayGameState));
 
@@ -141,20 +162,179 @@ export class SudokuBoard {
     this.arrayGameState = tempUnsolvedPuzzle;
     this.stringGameState = parseGameStateToString(this.arrayGameState);
   };
+  //🧰 return action and postion based on input string
+  parseHistoryMove = (stringAct: string) => {
+    //2 number mean delete and its coordinates, 3 number mean fill value and its coordinates
+    const pattern = new RegExp("[0-9][0-9][1-9]|[0-9][0-9]");
+    if (!pattern.test(stringAct)) return null;
+    //coordinates to number
+    const posX = parseInt(stringAct[0]);
+    const posY = parseInt(stringAct[1]);
 
+    //value or not depend on if it's a fill or remove
+    const value = stringAct.length === 3 ? parseInt(stringAct[2]) : null;
+    return { posX, posY, value };
+  };
   //🧰
-  fillCell = (posX: number, posY: number, value: number) => {
+  fillCell = (
+    posX: number,
+    posY: number,
+    value: number,
+    updateHistory = true
+  ) => {
     //validate number
     if (value > 9 || value < 1) return;
+
+    //move
     this.arrayGameState[posX][posY] = value;
     this.stringGameState = parseGameStateToString(this.arrayGameState);
+
+    if (!updateHistory) return; //stopped if no need to update history
+
+    //update history
+    const actString = posX.toString() + posY.toString() + value.toString();
+    if (this.undoedHistory.length === 0) {
+      //if previous move is a fresh move (not undoed by other moves), update casually
+      this.actionHistory.push(actString);
+    } else {
+      //in case previous move is undoed by other move, which need proper history update
+      this.updateHistory(actString);
+    }
   };
 
   //🧰
-  eraseCell = (posX: number, posY: number) => {
+  updateHistory = (latestMove: string) => {
+    //special case: only 1 move done
+    if (this.actionHistory.length === 0 && this.undoedHistory.length === 1) {
+      //get the only move coordinates
+      const onlyMove = this.undoedHistory[0];
+      const parsedHistory = this.parseHistoryMove(onlyMove);
+      if (parsedHistory) {
+        const { posX, posY } = parsedHistory;
+
+        // the history has form [before undoed move, undo (erase) move, latest move ]
+        const actString = posX.toString() + posY.toString();
+        this.actionHistory = [onlyMove, actString, latestMove];
+
+        //clean undoed history
+        this.undoedHistory.pop();
+        return;
+      }
+    }
+    //normal case:
+    //algorithm to append the undoed history to mainline when new move is made
+    const latestHistoryMove = this.actionHistory[this.actionHistory.length - 1];
+    const tempArray = JSON.parse(JSON.stringify(this.undoedHistory)); //deep copy 2 arrays
+    const tempArray2 = JSON.parse(JSON.stringify(this.undoedHistory));
+
+    tempArray.push(latestHistoryMove);
+    tempArray.reverse();
+    tempArray.pop();
+
+    //the updated one has form [  reversed undoed list, undoed list ,latest item in mainline]
+    // more specific explain [the ones before undos, the undoed ones, newest one which isn't undo ]
+    this.actionHistory = [
+      ...this.actionHistory.slice(0, this.actionHistory.length - 1),
+      ...tempArray,
+      ...tempArray2,
+      latestHistoryMove,
+    ];
+
+    this.actionHistory.push(latestMove); //finally add the just made move
+    this.undoedHistory.splice(0, this.undoedHistory.length); //delete undoed items
+  };
+
+  //🧰
+  eraseCell = (posX: number, posY: number, updateHistory = true) => {
+    //move
     this.arrayGameState[posX][posY] = 0;
     this.stringGameState = parseGameStateToString(this.arrayGameState);
+
+    if (!updateHistory) return; //stop if no need to update history
+
+    //update history
+    const actString = posX.toString() + posY.toString();
+    if (this.undoedHistory.length === 0) {
+      //if previous move is a fresh move (not undoed by other moves), update casually
+      this.actionHistory.push(actString);
+    } else {
+      //in case previous move is undoed by other move, which need proper history update
+      this.updateHistory(actString);
+    }
   };
 
   //🧰
+  undo = () => {
+    //if no history, do nothing
+    if (this.actionHistory.length === 0) return;
+
+    //special case: only 1 move made -> clear that move whatever
+    if (this.actionHistory.length === 1) {
+      //get move info
+      const parsedHistory = this.parseHistoryMove(this.actionHistory[0]);
+
+      //update history
+      const undoedMove = this.actionHistory.pop();
+      undoedMove && this.undoedHistory.push(undoedMove); //prevent null when popped
+
+      if (parsedHistory) {
+        const { posX, posY } = parsedHistory;
+        //do the history action
+        return this.eraseCell(posX, posY, false);
+      }
+    }
+
+    //normal case: (at least 2 moves)
+    //get previous move
+    const prevMove = this.actionHistory[this.actionHistory.length - 2];
+
+    //get move info
+    const parsedHistory = this.parseHistoryMove(prevMove);
+    if (parsedHistory === null) throw Error("invalid action in history");
+    const { value, posX, posY } = parsedHistory;
+
+    //update history
+    const undoedMove = this.actionHistory.pop();
+    undoedMove && this.undoedHistory.push(undoedMove); //prevent null when popped
+
+    //do the history action
+    if (value) return this.fillCell(posX, posY, value, false);
+    return this.eraseCell(posX, posY);
+  };
+
+  //🧰
+  forward = () => {
+    //cant move forward if no undoed moves
+    if (this.undoedHistory.length === 0) return;
+
+    //get the most recent undoed move
+    const mostRecentUndoed = this.undoedHistory.pop();
+    const parsedHistory =
+      mostRecentUndoed && this.parseHistoryMove(mostRecentUndoed);
+    if (parsedHistory) {
+      const { posX, posY, value } = parsedHistory;
+
+      //reupdate history
+      this.actionHistory.push(mostRecentUndoed);
+
+      //do action
+      if (value) return this.fillCell(posX, posY, value, false);
+      return this.eraseCell(posX, posY, false);
+    }
+  };
+
+  //🧰
+  resetGame = () => {
+    //reset everything
+    this.stringGameState = "";
+    this.stringSolutionState = "";
+    //properly remove the same adress data for array
+    this.arrayGameState.splice(0, this.arrayGameState.length);
+    this.actionHistory.splice(0, this.actionHistory.length);
+    this.undoedHistory.splice(0, this.undoedHistory.length);
+    this.arraySolutionState.splice(0, this.arraySolutionState.length);
+
+    //make empty board
+    this.generateEmptyBoard();
+  };
 }

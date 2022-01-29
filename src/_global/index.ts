@@ -29,4 +29,16 @@ const invalidBoardString =
   "100804020\n" +
   "706000810\n" +
   "300090000";
-export { boardString, invalidBoardString, boardArray };
+
+const solvedBoardString =
+  "549216378\n" +
+  "261378594\n" +
+  "783549162\n" +
+  "124793685\n" +
+  "358162947\n" +
+  "697854231\n" +
+  "932485716\n" +
+  "415637829\n" +
+  "876921453\n";
+
+export { boardString, invalidBoardString, boardArray, solvedBoardString };
