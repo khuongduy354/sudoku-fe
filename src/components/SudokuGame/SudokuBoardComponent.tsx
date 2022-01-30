@@ -11,6 +11,12 @@ export const SudokuBoardComponent = ({ board }: SudokuBoardProps) => {
     board.getArrayGameState()
   );
 
+  useEffect(() => {
+    if (board.isPuzzleSolved()) {
+      alert("You solved the puzzle");
+    }
+  }, [gameBoardArray]);
+
   return (
     <BoardProvider
       value={{
