@@ -46,7 +46,30 @@ button:hover {
   color: white;
   background-color: #0a9396;
   transition: 0.15s;
+  cursor: pointer;
 }
 .home__btn {
   margin: 1px 0;
+}
+.circularMenu {
+  font-size: 0;
+}
+.circularMenu::before {
+  content: "";
+}
+
+.emptyCell:hover {
+  cursor: pointer;
+}
+
+.satelites {
+  background-color: #f8f9fa;
+}
+
+.satelites:hover {
+  background-color: grey;
+}
+
+.pointer {
+  cursor: pointer;
 }

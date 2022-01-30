@@ -10,6 +10,7 @@ export const HomeScreen = () => {
         backgroundColor: "",
       }}
     >
+      <h1>New Year Sudoku</h1>
       <button className="home__btn" type="button">
         <a href={window.location.href + "single-player"}>Single Player</a>
       </button>

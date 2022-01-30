@@ -1,6 +1,7 @@
 import { SudokuBoardComponent } from "./SudokuGame/SudokuBoardComponent";
 import { sudokuBoardBuilder } from "../Sudoku";
 export const SinglePlayer = () => {
+  const backgroundColor = "#D3E4CD";
   const newBoard = sudokuBoardBuilder();
   newBoard.generateRandomBoard();
   return (
@@ -10,7 +11,7 @@ export const SinglePlayer = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "",
+        backgroundColor: backgroundColor,
       }}
     >
       <SudokuBoardComponent board={newBoard} />
