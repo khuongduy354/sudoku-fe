@@ -5,6 +5,7 @@ import {
   isCellValid,
   randomNumbersGenerator,
 } from "../helper";
+import { timeStamp } from "console";
 export class SudokuBoard {
   //getter methods: 🥖
   //checker methods: 🏁
@@ -12,6 +13,7 @@ export class SudokuBoard {
   //constructor / maker methods: 🏗️
   //props: 🏬
 
+  originalArrayGameState: number[][] = [];
   actionHistory: string[] = []; //main timeline 🏬
   undoedHistory: string[] = []; //use for history mechanism 🏬
   stringGameState: string = ""; //game state in string form 🏬
@@ -28,7 +30,9 @@ export class SudokuBoard {
       //else update it according to input board
       this.stringGameState = initialBoard;
       this.arrayGameState = parseGameStateToArray(this.stringGameState);
+      this.originalArrayGameState = parseGameStateToArray(this.stringGameState);
     }
+
     //parse string to array
     if (initialBoard !== "")
       //if it's not empty, solve it
@@ -46,6 +50,10 @@ export class SudokuBoard {
   //getter for history 🥖
   getActionHistory = () => {
     return this.actionHistory;
+  };
+  //getter for original game 🥖
+  getOriginalArray = () => {
+    return this.originalArrayGameState;
   };
 
   //getter for undoed history 🥖
@@ -111,6 +119,7 @@ export class SudokuBoard {
       this.stringGameState = this.stringGameState + "000000000\n";
     }
     this.arrayGameState = parseGameStateToArray(this.stringGameState);
+    this.originalArrayGameState = parseGameStateToArray(this.stringGameState);
   };
   //generate a random board game based on difficulty 🏗️️
   generateRandomBoard = (difficulty: number = 0.5) => {
@@ -161,6 +170,7 @@ export class SudokuBoard {
 
     this.arrayGameState = tempUnsolvedPuzzle;
     this.stringGameState = parseGameStateToString(this.arrayGameState);
+    this.originalArrayGameState = parseGameStateToArray(this.stringGameState);
   };
   //🧰 return action and postion based on input string
   parseHistoryMove = (stringAct: string) => {
@@ -332,6 +342,7 @@ export class SudokuBoard {
     this.arrayGameState.splice(0, this.arrayGameState.length);
     this.actionHistory.splice(0, this.actionHistory.length);
     this.undoedHistory.splice(0, this.undoedHistory.length);
+    this.originalArrayGameState.splice(0, this.originalArrayGameState.length);
     this.arraySolutionState.splice(0, this.arraySolutionState.length);
 
     //make empty board
