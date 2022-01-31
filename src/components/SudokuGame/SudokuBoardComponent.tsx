@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { SudokuBoard } from "../../Sudoku/SudokuBoard/SudokuBoard";
 import { SudokuCell } from "./SudokuCell";
 import { BoardProvider } from "./BoardContext/BoardContext";
+
+import { getAffectedCells, isCellInList } from "../../Sudoku/helper";
+
 type SudokuBoardProps = {
   board: SudokuBoard;
 };
@@ -15,6 +18,17 @@ export const SudokuBoardComponent = ({ board }: SudokuBoardProps) => {
     posY: -1,
     value: 0,
   });
+  const [affectedCellsList, setAffectedCellsList] = useState(
+    getAffectedCells(selectedCell.posX, selectedCell.posY)
+  );
+
+  useEffect(() => {
+    if (selectedCell.posX !== -1) {
+      const { posX: testPosX, posY: testPosY } = selectedCell;
+      const affectedCellsList = getAffectedCells(testPosX, testPosY);
+      setAffectedCellsList(affectedCellsList);
+    }
+  }, [selectedCell]);
 
   useEffect(() => {
     if (board.isPuzzleSolved()) {
@@ -37,6 +51,7 @@ export const SudokuBoardComponent = ({ board }: SudokuBoardProps) => {
               <tr key={posX}>
                 {row.map((col, posY) => (
                   <SudokuCell
+                    isAffected={isCellInList(posX, posY, affectedCellsList)}
                     selectedCell={selectedCell}
                     setSelectedCell={setSelectedCell}
                     key={posY}

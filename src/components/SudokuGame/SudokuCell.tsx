@@ -9,6 +9,7 @@ type SudokuCellProps = {
   posY: number;
   setSelectedCell: Function;
   selectedCell: { posX: number; posY: number; value: number };
+  isAffected: boolean;
 };
 
 export const SudokuCell = ({
@@ -17,6 +18,7 @@ export const SudokuCell = ({
   value,
   posX,
   posY,
+  isAffected,
 }: SudokuCellProps) => {
   const { boardArray, setBoardArray, board } = useContext(BoardContext);
 
@@ -32,6 +34,7 @@ export const SudokuCell = ({
   }, [boardArray, board.getArrayGameState()]);
 
   const isCellOriginal = board.getOriginalArray()[posX][posY] !== 0;
+  const isSelected = selectedCell.posX === posX && selectedCell.posY === posY;
   const areaBorderColor = "#99A799";
   const cellSize = "53px";
   const cellColor = "#F8F9FA";
@@ -117,10 +120,11 @@ export const SudokuCell = ({
       className={"cell " + `${!isCellOriginal && "pointer"}`}
       style={{
         color: isCellOriginal ? "black" : isCorrectValue ? "blue" : "red",
-        backgroundColor:
-          selectedCell.posX === posX && selectedCell.posY === posY
-            ? "yellow"
-            : cellColor,
+        backgroundColor: isSelected
+          ? "yellow"
+          : isAffected
+          ? "orange"
+          : cellColor,
         display: "inline-block",
         width: cellSize,
         height: cellSize,
