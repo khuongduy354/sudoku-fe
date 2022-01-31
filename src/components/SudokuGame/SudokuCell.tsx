@@ -7,9 +7,17 @@ type SudokuCellProps = {
   value: number;
   posX: number;
   posY: number;
+  setSelectedCell: Function;
+  selectedCell: { posX: number; posY: number; value: number };
 };
 
-export const SudokuCell = ({ value, posX, posY }: SudokuCellProps) => {
+export const SudokuCell = ({
+  selectedCell,
+  setSelectedCell,
+  value,
+  posX,
+  posY,
+}: SudokuCellProps) => {
   const { boardArray, setBoardArray, board } = useContext(BoardContext);
 
   const [doRenderOption, setDoRenderOption] = useState(false);
@@ -103,12 +111,16 @@ export const SudokuCell = ({ value, posX, posY }: SudokuCellProps) => {
   return (
     <td
       onClick={() => {
+        setSelectedCell({ posX, posY });
         !isCellOriginal && setDoRenderOption(true);
       }}
-      className={"" + `${!isCellOriginal && "pointer"}`}
+      className={"cell " + `${!isCellOriginal && "pointer"}`}
       style={{
         color: isCellOriginal ? "black" : isCorrectValue ? "blue" : "red",
-        backgroundColor: cellColor,
+        backgroundColor:
+          selectedCell.posX === posX && selectedCell.posY === posY
+            ? "yellow"
+            : cellColor,
         display: "inline-block",
         width: cellSize,
         height: cellSize,

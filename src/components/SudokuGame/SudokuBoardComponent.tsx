@@ -10,6 +10,11 @@ export const SudokuBoardComponent = ({ board }: SudokuBoardProps) => {
   const [gameBoardArray, setGameBoardArray] = useState(
     board.getArrayGameState()
   );
+  const [selectedCell, setSelectedCell] = useState({
+    posX: -1,
+    posY: -1,
+    value: 0,
+  });
 
   useEffect(() => {
     if (board.isPuzzleSolved()) {
@@ -31,7 +36,14 @@ export const SudokuBoardComponent = ({ board }: SudokuBoardProps) => {
             <React.Fragment>
               <tr key={posX}>
                 {row.map((col, posY) => (
-                  <SudokuCell key={posY} posX={posX} posY={posY} value={col} />
+                  <SudokuCell
+                    selectedCell={selectedCell}
+                    setSelectedCell={setSelectedCell}
+                    key={posY}
+                    posX={posX}
+                    posY={posY}
+                    value={col}
+                  />
                 ))}
               </tr>
             </React.Fragment>

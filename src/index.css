@@ -73,3 +73,6 @@ button:hover {
 .pointer {
   cursor: pointer;
 }
+.cell:hover {
+  background-color: grey !important;
+}
