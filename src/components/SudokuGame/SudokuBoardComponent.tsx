@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { SudokuBoard } from "../../Sudoku/SudokuBoard/SudokuBoard";
 import { SudokuCell } from "./SudokuCell";
 import { BoardProvider } from "./BoardContext/BoardContext";
-
+import { Store } from "react-notifications-component";
 import { getAffectedCells, isCellInList } from "../../Sudoku/helper";
 
 type SudokuBoardProps = {
@@ -22,6 +22,7 @@ export const SudokuBoardComponent = ({ board }: SudokuBoardProps) => {
     getAffectedCells(selectedCell.posX, selectedCell.posY)
   );
 
+  const [gameFinished, setGameFinished] = useState(false);
   useEffect(() => {
     if (selectedCell.posX !== -1) {
       const { posX: testPosX, posY: testPosY } = selectedCell;
@@ -32,7 +33,7 @@ export const SudokuBoardComponent = ({ board }: SudokuBoardProps) => {
 
   useEffect(() => {
     if (board.isPuzzleSolved()) {
-      alert("You solved the puzzle");
+      setGameFinished(true);
     }
   }, [gameBoardArray]);
 
@@ -44,6 +45,24 @@ export const SudokuBoardComponent = ({ board }: SudokuBoardProps) => {
         board: board,
       }}
     >
+      {gameFinished && (
+        <div
+          style={{ position: "absolute" }}
+          className="alert alert-primary"
+          role="alert"
+        >
+          You won the game!
+          <button
+            style={{ fontSize: "16px", width: "100px", marginLeft: "30px" }}
+            onClick={() => {
+              window.location.href = "single-player";
+            }}
+          >
+            Restart
+          </button>
+        </div>
+      )}
+
       <table style={{ borderSpacing: "0px" }}>
         {gameBoardArray.map((row, posX) => {
           return (
@@ -51,7 +70,14 @@ export const SudokuBoardComponent = ({ board }: SudokuBoardProps) => {
               <tr key={posX}>
                 {row.map((col, posY) => (
                   <SudokuCell
-                    isAffected={isCellInList(posX, posY, affectedCellsList)}
+                    isAffectedByPosition={isCellInList(
+                      posX,
+                      posY,
+                      affectedCellsList
+                    )}
+                    isAffectedByValue={
+                      selectedCell.value === col && selectedCell.value !== 0
+                    }
                     selectedCell={selectedCell}
                     setSelectedCell={setSelectedCell}
                     key={posY}

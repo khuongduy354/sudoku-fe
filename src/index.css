@@ -74,5 +74,5 @@ button:hover {
   cursor: pointer;
 }
 .cell:hover {
-  background-color: grey !important;
+  background-color: #c1deae !important;
 }
