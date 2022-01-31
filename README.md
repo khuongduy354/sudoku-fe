@@ -11,6 +11,6 @@
 
 # Needed features
 
-- Need decoration: game mode, github link, better title
+- Need decoration: better title, fireworks
 - Notes feature
 - Responsiveness
