@@ -48,7 +48,7 @@ export const SudokuBoardComponent = ({ board }: SudokuBoardProps) => {
       {gameFinished && (
         <div
           style={{ position: "absolute" }}
-          className="alert alert-primary"
+          className="alert alert-success"
           role="alert"
         >
           You won the game!
