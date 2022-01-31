@@ -122,8 +122,9 @@ export class SudokuBoard {
     this.originalArrayGameState = parseGameStateToArray(this.stringGameState);
   };
   //generate a random board game based on difficulty 🏗️️
-  generateRandomBoard = (difficulty: number = 0.5) => {
+  generateRandomBoard = (difficulty: number = 0.6) => {
     this.resetGame(); //reset everything
+
     //deep clone array
     const tempSolutionArray = JSON.parse(JSON.stringify(this.arrayGameState));
 
