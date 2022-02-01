@@ -1,7 +1,7 @@
 {
   "name": "sudoku",
   "version": "0.1.0",
-  "homepage": "https://khuongduy354.github.io/sudoku-fe/",
+  "homepage": "https://khuongduy354.github.io/sudoku-fe",
   "private": false,
   "dependencies": {
     "@material-ui/core": "^4.12.3",
