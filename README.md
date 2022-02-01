@@ -13,4 +13,3 @@
 
 - Need decoration: better title, fireworks
 - Notes feature
-- Responsiveness

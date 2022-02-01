@@ -5,7 +5,6 @@ import {
   isCellValid,
   randomNumbersGenerator,
 } from "../helper";
-import { timeStamp } from "console";
 export class SudokuBoard {
   //getter methods: 🥖
   //checker methods: 🏁

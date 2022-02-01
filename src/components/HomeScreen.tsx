@@ -1,4 +1,5 @@
 import { AiFillGithub } from "react-icons/ai";
+import { GiFireworkRocket, GiFireRay } from "react-icons/gi";
 export const HomeScreen = () => {
   return (
     <div
@@ -11,7 +12,10 @@ export const HomeScreen = () => {
         backgroundColor: "",
       }}
     >
-      <h1>New Year Sudoku</h1>
+      <h1>Sudoku</h1>
+      <h5 style={{ marginBottom: "40px" }}>
+        Pháo bông <GiFireRay color="red" />{" "}
+      </h5>
       <button
         style={{ marginBottom: "50px" }}
         className="home__btn"
@@ -20,8 +24,8 @@ export const HomeScreen = () => {
         <a href={window.location.href + "single-player"}>Single Player</a>
       </button>
       <span>
-        <AiFillGithub />
-        <a href="https://github.com/khuongduy354/sudoku-fe.git">khuongduy354</a>
+        <AiFillGithub />{" "}
+        <a href="https://github.com/khuongduy354/sudoku-fe.git">khuongduy</a>
       </span>
     </div>
   );

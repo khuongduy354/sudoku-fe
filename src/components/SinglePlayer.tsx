@@ -6,7 +6,8 @@ export const SinglePlayer = () => {
   const [doStartGame, setDoStartGame] = useState(false);
   const [tough, setTough] = useState(0.7);
   const [board, setBoard] = useState(sudokuBoardBuilder());
-  const backgroundColor = "#D3E4CD";
+  const backgroundColor = "#e2737e";
+
   const renderDifficultyOption = () => {
     return (
       <React.Fragment>
@@ -43,6 +44,7 @@ export const SinglePlayer = () => {
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: backgroundColor,
+        backgroundImage: "linear-gradient(315deg, #3f0d12 0%, #e2737e 0%)",
       }}
     >
       {!doStartGame && renderDifficultyOption()}
