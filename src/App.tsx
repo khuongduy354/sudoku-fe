@@ -10,7 +10,7 @@ function App() {
     <React.Fragment>
       <Routes>
         <Route index element={<HomeScreen />} />
-        <Route path="single-player" element={<SinglePlayer />} />
+        <Route path="/single-player" element={<SinglePlayer />} />
       </Routes>
     </React.Fragment>
   );
