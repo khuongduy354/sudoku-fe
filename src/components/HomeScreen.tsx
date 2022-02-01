@@ -1,6 +1,9 @@
 import { AiFillGithub } from "react-icons/ai";
-import { GiFireworkRocket, GiFireRay } from "react-icons/gi";
-export const HomeScreen = () => {
+import { GiFireRay } from "react-icons/gi";
+type HomeScreenProps = {
+  setPage: React.Dispatch<React.SetStateAction<string>>;
+};
+export const HomeScreen = ({ setPage }: HomeScreenProps) => {
   return (
     <div
       style={{
@@ -21,7 +24,13 @@ export const HomeScreen = () => {
         className="home__btn"
         type="button"
       >
-        <a href={window.location.href + "single-player"}>Single Player</a>
+        <a
+          onClick={() => {
+            setPage("singlePlayer");
+          }}
+        >
+          Single Player
+        </a>
       </button>
       <span>
         <AiFillGithub />{" "}

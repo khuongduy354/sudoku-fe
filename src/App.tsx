@@ -1,17 +1,15 @@
 import { HomeScreen } from "./components/HomeScreen";
-import { Routes, Route, Link } from "react-router-dom";
 import { SinglePlayer } from "./components/SinglePlayer";
+import { useState } from "react";
 
 import React from "react";
 
 function App() {
+  const [page, setPage] = useState("home");
   console.log("works");
   return (
     <React.Fragment>
-      <Routes>
-        <Route index element={<HomeScreen />} />
-        <Route path="/single-player" element={<SinglePlayer />} />
-      </Routes>
+      {page === "home" ? <HomeScreen setPage={setPage} /> : <SinglePlayer />}
     </React.Fragment>
   );
 }
