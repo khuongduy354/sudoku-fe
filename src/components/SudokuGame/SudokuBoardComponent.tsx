@@ -76,7 +76,7 @@ export const SudokuBoardComponent = ({ board }: SudokuBoardProps) => {
           <button
             style={{ fontSize: "16px", width: "100px", marginLeft: "30px" }}
             onClick={() => {
-              window.location.href = "single-player";
+              location.reload();
             }}
           >
             Restart
