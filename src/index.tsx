@@ -5,7 +5,7 @@ import ReactBreakpoints from "react-breakpoints";
 
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, HashRouter } from "react-router-dom";
 const breakpoints = {
   mobile: 320,
   mobileLandscape: 480,
@@ -18,11 +18,11 @@ const breakpoints = {
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter basename={process.env.PUBLIC_URL}>
+    <HashRouter>
       <ReactBreakpoints breakpoints={breakpoints}>
         <App />
       </ReactBreakpoints>
-    </BrowserRouter>
+    </Hah>
   </React.StrictMode>,
   document.getElementById("root")
 );
