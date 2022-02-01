@@ -2,6 +2,7 @@
 
 - A sudoku game to play at Tết ( Lunar New Year :D )
 - Included sudoku class written in typescript inside that manages the whole game, which can be reused in other apps (as long as it supports typescript, js)
+- Link to site: https://khuongduy354.github.io/sudoku-fe/
 
 # Install source code
 
