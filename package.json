@@ -2,7 +2,7 @@
   "name": "sudoku",
   "version": "0.1.0",
   "homepage": "https://khuongduy354.github.io/sudoku-fe/",
-  "private": true,
+  "private": false,
   "dependencies": {
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
