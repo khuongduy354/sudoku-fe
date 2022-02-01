@@ -22,7 +22,7 @@ ReactDOM.render(
       <ReactBreakpoints breakpoints={breakpoints}>
         <App />
       </ReactBreakpoints>
-    </Hah>
+    </HashRouter>
   </React.StrictMode>,
   document.getElementById("root")
 );
