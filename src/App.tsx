@@ -5,6 +5,7 @@ import { SinglePlayer } from "./components/SinglePlayer";
 import React from "react";
 
 function App() {
+  console.log("works");
   return (
     <React.Fragment>
       <Routes>
