@@ -9,8 +9,8 @@ function App() {
   return (
     <React.Fragment>
       <Routes>
-        <Route path="/" element={<HomeScreen />} />
-        <Route path="/single-player" element={<SinglePlayer />} />
+        <Route index element={<HomeScreen />} />
+        <Route path="single-player" element={<SinglePlayer />} />
       </Routes>
     </React.Fragment>
   );

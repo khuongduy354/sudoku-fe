@@ -21,7 +21,7 @@ export const HomeScreen = () => {
         className="home__btn"
         type="button"
       >
-        <a href={window.location.href + "single-player"}>Single Player</a>
+        <a href={window.location.href + "/single-player"}>Single Player</a>
       </button>
       <span>
         <AiFillGithub />{" "}
